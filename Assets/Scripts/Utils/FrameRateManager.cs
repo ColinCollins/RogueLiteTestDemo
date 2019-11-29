@@ -13,7 +13,7 @@ public class FrameRateManager : MonoBehaviour
 
 	private void Awake()
 	{
-		// set target frame rate
+		// set owner frame rate
 		Application.targetFrameRate = 60;
 	}
 

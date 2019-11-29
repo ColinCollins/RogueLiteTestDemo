@@ -19,15 +19,15 @@ public class GameManager : MonoBehaviour
 
 	#region Generator Ctrl
 
-	private PlayerGenerator playGen;
+	private PlayerCtrl playerCtrl;
 
 	#endregion
 
 	// Start is called before the first frame update
 	void Start()
     {
-		playGen = GetComponent<PlayerGenerator>();
-		playGen.Init();
+		playerCtrl = GetComponent<PlayerCtrl>();
+		playerCtrl.Init();
 
 	}
 
