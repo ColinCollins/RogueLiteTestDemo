@@ -1,4 +1,4 @@
-﻿public enum SoliderState
+﻿public enum ElfState
 {
 	Idle,
 

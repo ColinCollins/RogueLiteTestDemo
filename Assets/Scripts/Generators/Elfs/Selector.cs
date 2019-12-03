@@ -15,7 +15,7 @@ public class Selector : MonoBehaviour
 			RaycastHit hit;
 			if (Physics.Raycast(ray, out hit, 1000f, layer))
 			{
-				SelectedCallback();
+				SelectedCallback(hit.transform.GetComponent<Selector>());
 			}
 			else
 			{
@@ -25,7 +25,7 @@ public class Selector : MonoBehaviour
 #endif
 	}
 
-	public virtual void SelectedCallback() { }
+	public virtual void SelectedCallback(Selector handle) { }
 
 	public virtual void CancelSelectedCallback() { }
 }

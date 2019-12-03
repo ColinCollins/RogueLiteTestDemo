@@ -5,7 +5,9 @@ using DG.Tweening;
 
 public class SoliderSelector : Selector
 {
-	private Transform attackRange;
+	public Transform attackRange;
+	public Transform detectRange;
+
 	private SoliderElf owner;
 
 	public float appearTime = 0.4f;
@@ -14,7 +16,6 @@ public class SoliderSelector : Selector
 	public void Init(SoliderElf owner)
 	{
 		this.owner = owner;
-		attackRange = transform.Find("AttackRange");
 	}
 
 	private void Update()
@@ -22,16 +23,16 @@ public class SoliderSelector : Selector
 		SelectedDetected();
 	}
 
-	public override void SelectedCallback()
+	public override void SelectedCallback(Selector handle)
 	{
-		base.SelectedCallback();
+		base.SelectedCallback(handle);
 
 		if (curHandle != null) {
 			curHandle.isSelected = false;
 			curHandle.HideAttackRange();
 		}
 
-		curHandle = this;
+		curHandle = handle as SoliderSelector;
 		curHandle.isSelected = true;
 		curHandle.ShowAttackRange();
 	}
@@ -47,9 +48,11 @@ public class SoliderSelector : Selector
 
 	public void ShowAttackRange () {
 		attackRange.DOScale(Vector3.one * owner.AttackRange, appearTime);
+		detectRange.DOScale(Vector3.one * owner.DetectRange, appearTime);
 	}
 
 	public void HideAttackRange () {
 		attackRange.DOScale(new Vector3(0, 0, 0), appearTime);
+		detectRange.DOScale(new Vector3(0, 0, 0), appearTime);
 	}
 }

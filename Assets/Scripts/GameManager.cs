@@ -1,34 +1,70 @@
-﻿using System.Collections;
+﻿                                                                                                                                    using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class GameManager : MonoBehaviour
 {
-
 	#region GameState
 	public enum GameState {
 		// Playing
-		GamePlaying,
+		Playing,
 		// StartMenu or Settle
-		GamePause,
+		Pause,
 		// Failed 
-		GameFailed
+		Failed
 	}
 
 	#endregion
 
-	#region Generator Ctrl
+	private CenterCtrl centerCtrl;
 
-	private PlayerCtrl playerCtrl;
+	#region UI 
+
+	private UISystem uiSystem;
+
+	#endregion 
+
+	#region Single
+
+	private static GameManager instance;
+	public static GameManager GetInstance() {
+		return instance;
+	}
 
 	#endregion
+
+	private GameState state = GameState.Pause;
+	public GameState State
+	{
+		get {
+			return state;
+		}
+		set {
+			state = value;
+			if (state == GameState.Pause)
+				Time.timeScale = 0;
+
+			if (state == GameState.Playing)
+				Time.timeScale = 1;
+		}
+	}
+
+	public int CurLevel = 1;
+
+	void Awake() {
+		instance = this;
+	}
 
 	// Start is called before the first frame update
 	void Start()
     {
-		playerCtrl = GetComponent<PlayerCtrl>();
-		playerCtrl.Init();
+		centerCtrl = GetComponent<CenterCtrl>();
+		centerCtrl.Init(this);
 
+		uiSystem = GetComponent<UISystem>();
+		uiSystem.Init(this);
 	}
 
     // Update is called once per frame
@@ -36,4 +72,17 @@ public class GameManager : MonoBehaviour
     {
         
     }
+
+	public bool isPlaying() {
+		return State == GameState.Playing;
+	}
+
+	public void PassToNextLevel() {
+		uiSystem.ShowSpecialPanel(PanelType.SettlePanel);
+	}
+
+	public void GameOver() {
+		State = GameState.Failed;
+		// uiSystem.ShowSpecialPanel(PanelType.SettlePanel);
+	}
 }

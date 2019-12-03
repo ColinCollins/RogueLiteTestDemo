@@ -2,19 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerElfsPool : ElfsPool<SoliderElf>
+public class EnemyElfsPool : ElfsPool<EnemyElf>
 {
 	public override void Init()
 	{
 		base.Init();
 	}
 
-	public override SoliderElf PopObj()
+	public override EnemyElf PopObj()
 	{
 		return base.PopObj();
 	}
 
-	public override void PushObj(SoliderElf obj)
+	public override void PushObj(EnemyElf obj)
 	{
 		obj.gameObject.SetActive(false);
 

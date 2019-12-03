@@ -6,6 +6,8 @@ TagManager:
   tags:
   - DashLine
   - EnemyBase
+  - Enemy
+  - Boom
   layers:
   - Default
   - TransparentFX
@@ -17,9 +19,9 @@ TagManager:
   - 
   - ClickObject
   - Solider
-  - DashLine
-  - 
-  - 
+  - GamePanel
+  - SettlePanel
+  - StartPanel
   - 
   - 
   - 

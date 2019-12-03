@@ -12,11 +12,12 @@ public class PlayerCtrl : MonoBehaviour
 
 	public LayerMask rayLayer;
 	public Animation clickObjAnim;
-	public PlayerElfsCtrl playerElfsCtrl;
+	public PlayerElfsCtrl PEPool;
 
 	// CD 恢复速度
 	public float RestoreSpeed = 10;
 	public float EnergyCast = 20;
+	public float MaxEnergyCount = 100;
 
 	#endregion
 
@@ -29,11 +30,7 @@ public class PlayerCtrl : MonoBehaviour
 
 	#endregion
 
-	#region UI
-
-	public Text EnergyText;
-	public Slider EnergySlider;
-	public float MaxEnergyCount = 100;
+	#region For GamePanel
 
 	private float curEnergyCount;
 	public float CurEnergyCount
@@ -41,8 +38,7 @@ public class PlayerCtrl : MonoBehaviour
 		set
 		{
 			curEnergyCount = value;
-			EnergySlider.value = curEnergyCount / MaxEnergyCount;
-			EnergyText.text = string.Format("{0}", Convert.ToInt32(curEnergyCount));
+			UISystem.GetInstance().UpdateGamePanelData();
 		}
 		get
 		{
@@ -52,22 +48,63 @@ public class PlayerCtrl : MonoBehaviour
 
 	#endregion
 
+	#region GameFlower
+
+	private CenterCtrl manager;
+
+	// temporary
+	public int life = 10;
+	public int Life {
+		get {
+			return life;
+		}
+
+		set {
+			life = value;	
+
+
+
+			if (life <= 0) {
+				GameManager.GetInstance().GameOver();
+			}
+		}
+	}
+
+	#endregion 
+
 	// Start is called before the first frame update
-	public void Init()
+	public void Init(CenterCtrl manager)
 	{
+		this.manager = manager;
 		curEnergyCount = MaxEnergyCount;
 		LocateObj.transform.localPosition = initLocatePos;
 
-		playerElfsCtrl.Init();
-		// start to moving
-		locateObjMoving();
+		PEPool.Init();
+
+		LocateObjMoving();
+	}
+
+	public void ResetScene()
+	{
+		Life = 10;
+		CurEnergyCount = MaxEnergyCount;
+
+		PEPool.Recycle(true);
 	}
 
 	// Update is called once per frame
 	void Update()
 	{
-		restoreEnergySlider();
-		clickToGenerateDetection();
+		if (GameManager.GetInstance().isPlaying())
+		{
+			restoreEnergySlider();
+			clickToGenerateDetection();
+
+			switchDOTween(true);
+		}
+		else {
+			switchDOTween(false);
+		}
 	}
 
 	private void clickToGenerateDetection()
@@ -88,7 +125,7 @@ public class PlayerCtrl : MonoBehaviour
 #endif
 	}
 
-	private void locateObjMoving()
+	public void LocateObjMoving()
 	{
 		Sequence moving = DOTween.Sequence();
 		moving.Append(LocateObj.transform.DOMoveX(-movingRange, 0f));
@@ -96,14 +133,18 @@ public class PlayerCtrl : MonoBehaviour
 
 		moving.AppendCallback(() =>
 		{
-			locateObjMoving();
+			LocateObjMoving();
 		});
+	}
+
+	public void switchDOTween(bool isOpen) {
+		if (isOpen && DOTween.timeScale <= 0) DOTween.timeScale = 1;
+		if (!isOpen && DOTween.timeScale > 0) DOTween.timeScale = 0;
 	}
 
 	public void ResetGenerator()
 	{
 		CurEnergyCount = MaxEnergyCount;
-
 	}
 
 	private void restoreEnergySlider()
@@ -112,6 +153,9 @@ public class PlayerCtrl : MonoBehaviour
 		{
 			CurEnergyCount += RestoreSpeed * Time.deltaTime;
 		}
+		else {
+			CurEnergyCount = MaxEnergyCount;
+		}
 	}
 
 	private void generateNewSolider()
@@ -119,12 +163,12 @@ public class PlayerCtrl : MonoBehaviour
 		var pos = LocateObj.transform.localPosition;
 		var Lx = pos.x;
 
-		if (curEnergyCount - EnergyCast < 0 || Lx <= -(movingRange - 2) || Lx >= (movingRange - 2))
+		if (curEnergyCount - EnergyCast < 0 || Lx <= -(movingRange - 5) || Lx >= (movingRange - 5))
 		{
 			return;
 		};
 
 		curEnergyCount -= EnergyCast;
-		playerElfsCtrl.GenerateNewSolider(pos);
+		PEPool.GenerateNewSolider(pos);
 	}
 }

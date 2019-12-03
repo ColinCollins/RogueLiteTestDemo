@@ -1,54 +1,70 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 
-public delegate void SoliderAIAction(SoliderElf handle);
+public delegate void EnemyAIAction(EnemyElf handle);
 
-public class SoliderElf : BaseElf
+public class EnemyElf : BaseElf
 {
-	private PlayerElfsCtrl manager;
-	private SoliderSelector selector;
 
-	public SoliderAIAction action;
-	public Transform boomTrigger;
+	public bool isAttack = false;
 
-	public ElfState State {
+	public EnemyAIAction action;
+	// temporary
+	public float life = 1;
+	public float Life {
+		get {
+			return life;
+		}
+
 		set {
+			life = value;
+			if (life <= 0) {
+				State = ElfState.Dead;
+			}
+		}
+	}
+
+	public ElfState State
+	{
+		set
+		{
 			state = value;
-			switch (state) {
+			switch (state)
+			{
 				case ElfState.Idle:
-					action = SoliderActions.Idle;
+					action = EnemyActions.Idle;
 					break;
 				case ElfState.GoStright:
-					action = SoliderActions.MoveStraight;
+					action = EnemyActions.MoveStraight;
 					break;
 				case ElfState.GoDestination:
-					action = SoliderActions.MoveDestination;
+					action = EnemyActions.MoveDestination;
 					break;
 				case ElfState.FindEnemy:
-					action = SoliderActions.FindEnemy;
-					action(this);
+					action = EnemyActions.FindEnemy;
 					break;
 				case ElfState.Attack:
-					action = SoliderActions.Attack;
+					action = EnemyActions.Attack;
 					action(this);
 					break;
 				case ElfState.Dead:
 					// Dead 不需要循环执行
-					action = SoliderActions.Dead;
+					action = EnemyActions.Dead;
 					action(this);
 					break;
 				default:
 					break;
 			}
 		}
-		get {
+		get
+		{
 			return state;
 		}
 	}
+	private EnemyElfsCtrl manager;
 
-	public void Init(PlayerElfsCtrl manager)
+	public void Init (EnemyElfsCtrl manager)
 	{
 		isInit = true;
 		isDead = false;
@@ -58,9 +74,6 @@ public class SoliderElf : BaseElf
 		animCover = GetComponent<AnimatorCover>();
 		anim = GetComponentInChildren<Animator>();
 		animCover.Init(anim);
-
-		selector = GetComponent<SoliderSelector>();
-		selector.Init(this);
 
 		BornedStage();
 	}
@@ -74,20 +87,21 @@ public class SoliderElf : BaseElf
 
 	public void BornedStage()
 	{
-		ResetProp();
 		State = ElfState.Idle;
+		ResetProp();
 	}
 
 	private void Update()
 	{
 		if (State == ElfState.Dead || State == ElfState.Attack || State == ElfState.FindEnemy) return;
 
-		action(this);
+		if (action != null) action(this);
 	}
 
 	#region Borned(Generate) Animation
 
-	public void PlayBornedAnim() {
+	public void PlayBornedAnim()
+	{
 		animCover.PlaySpecialAnim("Generate", BornedFinished);
 	}
 
@@ -113,36 +127,12 @@ public class SoliderElf : BaseElf
 		Debug.Log("AttackFinished");
 		// Target get damage
 
-		if (isSurvive) {
-			CenterCtrl.GetInstance().ECtrl.Life--;
+		if (isSurvive)
+		{
+			CenterCtrl.GetInstance().PCtrl.Life--;
 		}
 
-		// create a trigger collider
-		Sequence action = DOTween.Sequence();
-		action.Append(boomTrigger.transform.DOScale(Vector3.one * AttackRange, 0.2f));
-
-		action.AppendCallback(() => {
-			boomTrigger.transform.DOScale(Vector3.zero, 0f);
-			State = ElfState.Dead;
-		});
-	}
-
-	#endregion
-
-	#region FindEnemy State
-
-	public void PlayScared() {
-		anim.SetBool("Moving", false);
-		animCover.PlaySpecialAnim("Scared", FindEnemyAnimFinished);
-	}
-
-	public void FindEnemyAnimFinished() {
-		// move to
-		State = ElfState.GoDestination;
-
-		anim.SetBool("Moving", true);
-
-		Debug.Log("FindEnemyFinished");
+		State = ElfState.Dead;
 	}
 
 	#endregion
@@ -150,15 +140,27 @@ public class SoliderElf : BaseElf
 	#region Dead State
 
 	// 播放死亡
-	public void PlayDead() {
+	public void PlayDead()
+	{
+		anim.SetBool("Moving", false);
+		Debug.Log("Enemy Dead");
 		animCover.PlaySpecialAnim("Dead", DeadFinished);
 	}
 
 	// DeadAnimFinished
-	public void DeadFinished() {
-		Debug.Log("Solider Dead");
+	public void DeadFinished()
+	{
+		Debug.Log("Enemy Dead");
 		isDead = true;
 	}
 
 	#endregion
+
+
+	private void OnTriggerEnter(Collider other)
+	{
+		if (other.transform.tag.Equals("Boom")) {
+			Life--;
+		}
+	}
 }
