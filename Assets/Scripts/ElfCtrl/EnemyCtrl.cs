@@ -45,7 +45,10 @@ public class EnemyCtrl : MonoBehaviour
 
 	private void Update()
 	{
-		
+		if (generateCollection.handle != null && GameManager.GetInstance().isPlaying())
+		{
+			generateCollection.handle();
+		}
 	}
 
 	public void GenerateEnemy (Vector3 pos)

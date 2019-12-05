@@ -6,10 +6,17 @@ public delegate void EnemyAIAction(EnemyElf handle);
 
 public class EnemyElf : BaseElf
 {
-
 	public bool isAttack = false;
 
+	public ParticleSystem GeneratePar;
+	public ParticleSystem ExplorePar;
+
+	public AudioSource deadAudio;
+
 	public EnemyAIAction action;
+	public Animator personAnimator;
+	protected EnemyActionsCallback actionCallback;
+
 	// temporary
 	public float life = 1;
 	public float Life {
@@ -19,8 +26,9 @@ public class EnemyElf : BaseElf
 
 		set {
 			life = value;
-			if (life <= 0) {
+			if (life <= 0 && State != ElfState.Dead) {
 				State = ElfState.Dead;
+				deadAudio.Play();
 			}
 		}
 	}
@@ -71,9 +79,10 @@ public class EnemyElf : BaseElf
 		Target = null;
 		this.manager = manager;
 
-		animCover = GetComponent<AnimatorCover>();
+		Entity = transform.Find("Entity");
 		anim = GetComponentInChildren<Animator>();
-		animCover.Init(anim);
+		actionCallback = GetComponentInChildren<EnemyActionsCallback>();
+		actionCallback.Init(this);
 
 		BornedStage();
 	}
@@ -83,11 +92,15 @@ public class EnemyElf : BaseElf
 		Target = null;
 		isDead = false;
 		isSurvive = false;
+		Life = 1;
 	}
 
 	public void BornedStage()
 	{
 		State = ElfState.Idle;
+		GeneratePar.Play();
+
+		personAnimator.SetBool("Dash", true);
 		ResetProp();
 	}
 
@@ -102,7 +115,7 @@ public class EnemyElf : BaseElf
 
 	public void PlayBornedAnim()
 	{
-		animCover.PlaySpecialAnim("Generate", BornedFinished);
+		anim.SetTrigger("Generate");
 	}
 
 	// Animation Callback
@@ -119,7 +132,7 @@ public class EnemyElf : BaseElf
 	public void PlayAttack()
 	{
 		anim.SetBool("Moving", false);
-		animCover.PlaySpecialAnim("Attack", AttackFinished);
+		anim.SetTrigger("Attack");
 	}
 
 	public void AttackFinished()
@@ -129,7 +142,7 @@ public class EnemyElf : BaseElf
 
 		if (isSurvive)
 		{
-			CenterCtrl.GetInstance().PCtrl.Life--;
+			// CenterCtrl.GetInstance().PCtrl.Life--;
 		}
 
 		State = ElfState.Dead;
@@ -142,25 +155,27 @@ public class EnemyElf : BaseElf
 	// 播放死亡
 	public void PlayDead()
 	{
-		anim.SetBool("Moving", false);
-		Debug.Log("Enemy Dead");
-		animCover.PlaySpecialAnim("Dead", DeadFinished);
+		anim.SetTrigger("Dead");
 	}
 
 	// DeadAnimFinished
 	public void DeadFinished()
 	{
 		Debug.Log("Enemy Dead");
+		ExplorePar.Play();
 		isDead = true;
+
+		if (isSurvive) {
+			CenterCtrl.GetInstance().PCtrl.Life--;
+		}
 	}
 
 	#endregion
 
-
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.transform.tag.Equals("Boom")) {
-			Life--;
+			Life -= other.transform.parent.GetComponent<SoliderElf>().Attack;
 		}
 	}
 }

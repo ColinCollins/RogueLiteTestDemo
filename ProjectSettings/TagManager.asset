@@ -8,6 +8,8 @@ TagManager:
   - EnemyBase
   - Enemy
   - Boom
+  - UICanvas
+  - RenderCanvas
   layers:
   - Default
   - TransparentFX

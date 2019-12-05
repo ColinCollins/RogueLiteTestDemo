@@ -21,13 +21,6 @@ public class EnemyGenerateModel : MonoBehaviour
 		handle = null;
 	}
 
-	private void Update()
-	{
-		if (handle != null && GameManager.GetInstance().isPlaying()) {
-			handle();
-		}
-	}
-
 	public void SwitchGenerateModel(EnemyGenerateModelType type) {
 		switch (type) {
 			case EnemyGenerateModelType.Random:
@@ -44,10 +37,10 @@ public class EnemyGenerateModel : MonoBehaviour
 		curIntervalTime += Time.deltaTime;
 
 		if (curIntervalTime >= MaxIntervalTime) {
-			float posX = Random.Range(-48, 48);
+			float posX = Random.Range(-30, 30);
 			GeneratePoint1.transform.DOLocalMoveX(posX, 0f);
-			manager.GenerateEnemy(GeneratePoint1.transform.localPosition);
 			curIntervalTime = 0;
+			manager.GenerateEnemy(GeneratePoint1.transform.localPosition);
 		}
 	}
 }

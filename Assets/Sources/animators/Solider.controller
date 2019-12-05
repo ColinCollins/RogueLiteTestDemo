@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1101 &-8895146189075083209
+--- !u!1101 &-8611535578759352551
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
@@ -19,8 +19,8 @@ AnimatorStateTransition:
   serializedVersion: 3
   m_TransitionDuration: 0.25
   m_TransitionOffset: 0
-  m_ExitTime: 0.75
-  m_HasExitTime: 0
+  m_ExitTime: 0.25
+  m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
@@ -122,7 +122,7 @@ AnimatorStateMachine:
     m_Position: {x: 310, y: 300, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7376265093414109922}
-    m_Position: {x: 160, y: 420, z: 0}
+    m_Position: {x: 140, y: 440, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -7648321840192623419}
     m_Position: {x: 450, y: 510, z: 0}
@@ -130,14 +130,13 @@ AnimatorStateMachine:
     m_State: {fileID: 1987083269133675237}
     m_Position: {x: 760, y: 370, z: 0}
   m_ChildStateMachines: []
-  m_AnyStateTransitions:
-  - {fileID: -8895146189075083209}
+  m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions: {}
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: -40, y: 300, z: 0}
   m_EntryPosition: {x: -40, y: 100, z: 0}
-  m_ExitPosition: {x: -40, y: 230, z: 0}
+  m_ExitPosition: {x: -20, y: 520, z: 0}
   m_ParentStateMachinePosition: {x: 800, y: 20, z: 0}
   m_DefaultState: {fileID: -6769547543440342036}
 --- !u!1101 &-5474306756125568150
@@ -279,6 +278,7 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -6391180595358382507}
+  - {fileID: -8611535578759352551}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
@@ -361,9 +361,9 @@ AnimatorStateTransition:
   m_Mute: 0
   m_IsExit: 0
   serializedVersion: 3
-  m_TransitionDuration: 0.25
-  m_TransitionOffset: 0
-  m_ExitTime: 0.25
+  m_TransitionDuration: 0.23015212
+  m_TransitionOffset: 0.012759308
+  m_ExitTime: 0.5051868
   m_HasExitTime: 1
   m_HasFixedDuration: 1
   m_InterruptionSource: 0

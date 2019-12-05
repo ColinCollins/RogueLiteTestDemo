@@ -8,7 +8,7 @@ public class PlayerElfsCtrl : MonoBehaviour
 
 	// 增量
 	public int SoliderElfAttack = 1;
-	public float SoliderElfAttackRange = 2.5f;
+	public float SoliderElfAttackRange = 15f;
 	public float SoliderElfMoveSpeed = 15;
 
 	public GameObject PlayerBaseHome;
@@ -30,12 +30,13 @@ public class PlayerElfsCtrl : MonoBehaviour
 		if (tempComp.isInit)
 		{
 			tempComp.gameObject.SetActive(true);
+			tempComp.BornedStage();
 		}
 		else
 		{
 			tempComp.transform.SetParent(soliderPool.parent.transform);
 			tempComp.transform.localScale = Vector3.one;
-			tempComp.transform.localEulerAngles = new Vector3(0, 0, 0);
+			tempComp.transform.eulerAngles = new Vector3(0, 0, 0);
 			tempComp.Init(this);
 		}
 
@@ -43,11 +44,6 @@ public class PlayerElfsCtrl : MonoBehaviour
 
 		// 更新升级后的状态
 		resetOriginState(tempComp);
-
-		if (!tempComp.isInit)
-			tempComp.Init(this);
-		else
-			tempComp.BornedStage();
 
 		ExistList.Add(tempComp);
 	}

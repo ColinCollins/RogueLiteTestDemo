@@ -6,7 +6,8 @@ public enum PanelType
 {
 	StartPanel,
 	GamePanel,
-	SettlePanel
+	SettlePanel,
+	GameOverPanel
 }
 
 public class UISystem : MonoBehaviour
@@ -19,6 +20,7 @@ public class UISystem : MonoBehaviour
 	public GameObject SettlePanel;
 	public GameObject GamePanel;
 	public GameObject StartPanel;
+	public GameObject GameOverPanel;
 
 	#endregion
 
@@ -38,6 +40,7 @@ public class UISystem : MonoBehaviour
 	private SettlePanel hSettlePanel;
 	private GamePanel hGamePanel;
 	private StartPanel hStartPanel;
+	private GameOverPanel hGameOverPanel;
 
 	#region Single
 
@@ -61,6 +64,7 @@ public class UISystem : MonoBehaviour
 		hStartPanel = initPanel(StartPanel, PanelType.StartPanel) as StartPanel;
 		hSettlePanel = initPanel(SettlePanel, PanelType.SettlePanel) as SettlePanel;
 		hGamePanel = initPanel(GamePanel, PanelType.GamePanel) as GamePanel;
+		hGameOverPanel = initPanel(GameOverPanel, PanelType.GameOverPanel) as GameOverPanel;
 
 		SortPanel();
 
@@ -82,6 +86,9 @@ public class UISystem : MonoBehaviour
 				break;
 			case PanelType.GamePanel:
 				comp = panel.GetComponent<GamePanel>();
+				break;
+			case PanelType.GameOverPanel:
+				comp = panel.GetComponent<GameOverPanel>();
 				break;
 			default: break;
 		}
@@ -139,13 +146,13 @@ public class UISystem : MonoBehaviour
 			{
 				curPanelHandle.gameObject.SetActive(false);
 				// special 
-				SwitchClickObject(false);
+				// SwitchClickObject(false);
 			}
 
 			curPanelHandle = panel;
 			curPanelHandle.gameObject.SetActive(true);
 
-			SwitchClickObject(true);
+			// SwitchClickObject(true);
 		}
 
 		if (isUpdate)

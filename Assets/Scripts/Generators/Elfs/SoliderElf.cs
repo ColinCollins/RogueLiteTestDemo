@@ -10,13 +10,23 @@ public class SoliderElf : BaseElf
 	private PlayerElfsCtrl manager;
 	private SoliderSelector selector;
 
+	public AudioSource explorAudio;
+	public AudioSource generarteAudio;
+
+	public ParticleSystem GeneratePar;
+	public ParticleSystem ExplorePar;
+
 	public SoliderAIAction action;
 	public Transform boomTrigger;
+	protected SoliderActionsCallback actionCallback;
 
-	public ElfState State {
-		set {
+	public ElfState State
+	{
+		set
+		{
 			state = value;
-			switch (state) {
+			switch (state)
+			{
 				case ElfState.Idle:
 					action = SoliderActions.Idle;
 					break;
@@ -43,7 +53,8 @@ public class SoliderElf : BaseElf
 					break;
 			}
 		}
-		get {
+		get
+		{
 			return state;
 		}
 	}
@@ -55,9 +66,11 @@ public class SoliderElf : BaseElf
 		Target = null;
 		this.manager = manager;
 
-		animCover = GetComponent<AnimatorCover>();
+		Entity = transform.Find("Entity");
+
 		anim = GetComponentInChildren<Animator>();
-		animCover.Init(anim);
+		actionCallback = GetComponentInChildren<SoliderActionsCallback>();
+		actionCallback.Init(this);
 
 		selector = GetComponent<SoliderSelector>();
 		selector.Init(this);
@@ -75,6 +88,8 @@ public class SoliderElf : BaseElf
 	public void BornedStage()
 	{
 		ResetProp();
+		GeneratePar.Play();
+		generarteAudio.Play();
 		State = ElfState.Idle;
 	}
 
@@ -87,8 +102,9 @@ public class SoliderElf : BaseElf
 
 	#region Borned(Generate) Animation
 
-	public void PlayBornedAnim() {
-		animCover.PlaySpecialAnim("Generate", BornedFinished);
+	public void PlayBornedAnim()
+	{
+		anim.SetTrigger("Generate");
 	}
 
 	// Animation Callback
@@ -96,6 +112,7 @@ public class SoliderElf : BaseElf
 	{
 		anim.SetBool("Moving", true);
 		State = ElfState.GoStright;
+		transform.localEulerAngles = Vector3.zero;
 	}
 
 	#endregion
@@ -105,23 +122,27 @@ public class SoliderElf : BaseElf
 	public void PlayAttack()
 	{
 		anim.SetBool("Moving", false);
-		animCover.PlaySpecialAnim("Attack", AttackFinished);
+		anim.SetTrigger("Attack");
 	}
 
 	public void AttackFinished()
 	{
-		Debug.Log("AttackFinished");
-		// Target get damage
-
-		if (isSurvive) {
+		if (isSurvive)
+		{
 			CenterCtrl.GetInstance().ECtrl.Life--;
 		}
 
 		// create a trigger collider
 		Sequence action = DOTween.Sequence();
+		// temporary
+		ExplorePar.transform.localScale = Vector3.one * AttackRange / 2f;
+		ExplorePar.Play();
+		explorAudio.Play();
+
 		action.Append(boomTrigger.transform.DOScale(Vector3.one * AttackRange, 0.2f));
 
-		action.AppendCallback(() => {
+		action.AppendCallback(() =>
+		{
 			boomTrigger.transform.DOScale(Vector3.zero, 0f);
 			State = ElfState.Dead;
 		});
@@ -131,31 +152,30 @@ public class SoliderElf : BaseElf
 
 	#region FindEnemy State
 
-	public void PlayScared() {
+	public void PlayScared()
+	{
 		anim.SetBool("Moving", false);
-		animCover.PlaySpecialAnim("Scared", FindEnemyAnimFinished);
+		anim.SetTrigger("Scared");
 	}
 
-	public void FindEnemyAnimFinished() {
+	public void FindEnemyAnimFinished()
+	{
 		// move to
 		State = ElfState.GoDestination;
-
 		anim.SetBool("Moving", true);
-
-		Debug.Log("FindEnemyFinished");
 	}
 
 	#endregion
 
 	#region Dead State
 
-	// 播放死亡
-	public void PlayDead() {
-		animCover.PlaySpecialAnim("Dead", DeadFinished);
+	public void PlayDead()
+	{
+		anim.SetTrigger("Dead");
 	}
 
-	// DeadAnimFinished
-	public void DeadFinished() {
+	public void DeadFinished()
+	{
 		Debug.Log("Solider Dead");
 		isDead = true;
 	}

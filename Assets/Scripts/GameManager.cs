@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 	#endregion
 
 	private CenterCtrl centerCtrl;
-
+	private VibrateSystem vibrateSys;
 	#region UI 
 
 	private UISystem uiSystem;
@@ -65,6 +65,9 @@ public class GameManager : MonoBehaviour
 
 		uiSystem = GetComponent<UISystem>();
 		uiSystem.Init(this);
+
+		vibrateSys = new VibrateSystem();
+		vibrateSys.Init();
 	}
 
     // Update is called once per frame
@@ -74,6 +77,7 @@ public class GameManager : MonoBehaviour
     }
 
 	public bool isPlaying() {
+
 		return State == GameState.Playing;
 	}
 
@@ -83,6 +87,6 @@ public class GameManager : MonoBehaviour
 
 	public void GameOver() {
 		State = GameState.Failed;
-		// uiSystem.ShowSpecialPanel(PanelType.SettlePanel);
+		uiSystem.ShowSpecialPanel(PanelType.SettlePanel);
 	}
 }

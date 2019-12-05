@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class BaseElf : MonoBehaviour
 {
+	public Transform Entity;
+
 	// destination pos
 	[HideInInspector]
 	public GameObject Target;
@@ -13,15 +15,14 @@ public class BaseElf : MonoBehaviour
 	public bool isDead = false;
 
 	protected Animator anim;
-	protected AnimatorCover animCover;
 
 	#region Elf Prop
 
 	[HideInInspector]
 	public int Attack = 1;
-	[HideInInspector]
-	public float AttackRange = 2.5f;
-	public float DetectRange = 5;
+
+	public float AttackRange = 10f;
+	public float DetectRange = 20f;
 
 	[HideInInspector]
 	public float MoveSpeed = 10f;

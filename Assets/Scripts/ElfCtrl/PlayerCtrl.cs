@@ -11,7 +11,6 @@ public class PlayerCtrl : MonoBehaviour
 	#region Properties union
 
 	public LayerMask rayLayer;
-	public Animation clickObjAnim;
 	public PlayerElfsCtrl PEPool;
 
 	// CD 恢复速度
@@ -25,8 +24,8 @@ public class PlayerCtrl : MonoBehaviour
 
 	public GameObject LocateObj;
 	public float LocateMovingTime = 2.0f;
-	private float movingRange = 50;
-	private Vector3 initLocatePos = new Vector3(0, 3, -68);
+	private float movingRange = 30;
+	private Vector3 initLocatePos = new Vector3(0, 0, -68);
 
 	#endregion
 
@@ -62,15 +61,15 @@ public class PlayerCtrl : MonoBehaviour
 		set {
 			life = value;	
 
-
-
 			if (life <= 0) {
 				GameManager.GetInstance().GameOver();
 			}
 		}
 	}
 
-	#endregion 
+	#endregion
+
+	private bool isTouchDown = false;
 
 	// Start is called before the first frame update
 	public void Init(CenterCtrl manager)
@@ -81,7 +80,7 @@ public class PlayerCtrl : MonoBehaviour
 
 		PEPool.Init();
 
-		LocateObjMoving();
+		// LocateObjMoving();
 	}
 
 	public void ResetScene()
@@ -109,20 +108,39 @@ public class PlayerCtrl : MonoBehaviour
 
 	private void clickToGenerateDetection()
 	{
-#if UNITY_EDITOR
-		if (Input.GetMouseButtonDown(0))
-		{
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit hit;
-			if (Physics.Raycast(ray, out hit, 1000f, rayLayer))
-			{
-				// play Animation
-				clickObjAnim.Play();
-				// Generate
-				generateNewSolider();
-			}
-		}
-#endif
+//#if UNITY_EDITOR
+//		if (Input.GetMouseButtonDown(0))
+//		{
+//			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+//			RaycastHit hit;
+//			if (Physics.Raycast(ray, out hit, 1000f, rayLayer))
+//			{
+//				// play Animation
+//				clickObjAnim.Play();
+//				// Generate
+//				generateNewSolider();
+//			}
+//		}
+//#endif
+//#if UNITY_ANDROID
+//		if (Input.touchCount > 0 && !isTouchDown)
+//		{
+//			isTouchDown = true;
+
+//			var touch = Input.GetTouch(0);
+//			Ray ray = Camera.main.ScreenPointToRay(touch.position);
+//			RaycastHit hit;
+//			if (Physics.Raycast(ray, out hit, 1000f, rayLayer))
+//			{
+//				// play Animation
+//				clickObjAnim.Play();
+//				// Generate
+//				generateNewSolider();
+//			}
+//		}
+
+//		if (Input.touchCount <= 0) isTouchDown = false;
+//#endif
 	}
 
 	public void LocateObjMoving()
@@ -158,12 +176,12 @@ public class PlayerCtrl : MonoBehaviour
 		}
 	}
 
-	private void generateNewSolider()
+	public void GenerateNewSolider()
 	{
 		var pos = LocateObj.transform.localPosition;
 		var Lx = pos.x;
 
-		if (curEnergyCount - EnergyCast < 0 || Lx <= -(movingRange - 5) || Lx >= (movingRange - 5))
+		if (curEnergyCount - EnergyCast < 0 || Lx <= -(movingRange - 3) || Lx >= (movingRange - 3))
 		{
 			return;
 		};

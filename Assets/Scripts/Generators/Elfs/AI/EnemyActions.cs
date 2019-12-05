@@ -8,6 +8,8 @@ public class EnemyActions
 	{
 		// stay
 		handle.PlayBornedAnim();
+		handle.transform.localEulerAngles = Vector3.zero;
+		handle.Entity.localScale = Vector3.one * 5;
 	}
 
 	public static void MoveStraight(EnemyElf handle)

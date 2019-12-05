@@ -25,6 +25,7 @@ public class EnemyElfsCtrl : MonoBehaviour
 		if (tempComp.isInit)
 		{
 			tempComp.gameObject.SetActive(true);
+			tempComp.BornedStage();
 		}
 		else {
 			tempComp.transform.SetParent(enemyElfsPool.parent.transform);
@@ -53,6 +54,7 @@ public class EnemyElfsCtrl : MonoBehaviour
 			{
 				enemyElfsPool.PushObj(enemy);
 				ExistList.Remove(enemy);
+				i--;
 			}
 		}
 	}

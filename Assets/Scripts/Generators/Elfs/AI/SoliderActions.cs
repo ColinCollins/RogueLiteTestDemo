@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 
 public class SoliderActions
 {
@@ -20,7 +21,14 @@ public class SoliderActions
 
 		if (!handle.Target.activeSelf) {
 			handle.Target = null;
-			handle.State = ElfState.GoStright;
+
+			Sequence reback = DOTween.Sequence();
+			reback.Append(handle.transform.DOLocalRotate(Vector3.zero, 0.3f));
+			reback.AppendCallback(() =>
+			{
+				handle.State = ElfState.GoStright;
+			});
+
 			return;
 		}
 
@@ -33,7 +41,7 @@ public class SoliderActions
 
 		float dis = Vector3.Distance(handle.Target.transform.localPosition, handle.transform.localPosition);
 
-		if (dis < handle.AttackRange) {
+		if (dis < (handle.AttackRange / 2f)) {
 			handle.State = ElfState.Attack;
 		} 
 	}

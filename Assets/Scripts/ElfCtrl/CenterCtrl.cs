@@ -65,7 +65,7 @@ public class CenterCtrl : MonoBehaviour
 				Vector3 pos = enemy.transform.localPosition;
 				dis = Vector3.Distance(localPos, pos);
 
-				if (dis < (solider.DetectRange * 5) && solider.State == ElfState.GoStright)
+				if (dis < solider.DetectRange && solider.State == ElfState.GoStright)
 				{
 					solider.Target = enemy.gameObject;
 					solider.State = ElfState.FindEnemy;
@@ -75,7 +75,7 @@ public class CenterCtrl : MonoBehaviour
 			float targetZ = enemyElfsCtrl.EnemyBaseHome.transform.localPosition.z;
 			float dt = targetZ - localPos.z;
 
-			if (dt < solider.AttackRange && !solider.isSurvive) {
+			if (dt < (solider.AttackRange / 2f) && !solider.isSurvive) {
 				solider.State = ElfState.Attack;
 				solider.isSurvive = true;
 			}
