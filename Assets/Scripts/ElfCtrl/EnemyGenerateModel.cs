@@ -14,6 +14,7 @@ public class EnemyGenerateModel : MonoBehaviour
 
 	public float MaxIntervalTime = 0.5f;
 	private float curIntervalTime = 0;
+	private float model1GenerateRange = 6;
 
 	public void Init(EnemyCtrl manager)
 	{
@@ -37,7 +38,7 @@ public class EnemyGenerateModel : MonoBehaviour
 		curIntervalTime += Time.deltaTime;
 
 		if (curIntervalTime >= MaxIntervalTime) {
-			float posX = Random.Range(-30, 30);
+			float posX = Random.Range(-model1GenerateRange, model1GenerateRange);
 			GeneratePoint1.transform.DOLocalMoveX(posX, 0f);
 			curIntervalTime = 0;
 			manager.GenerateEnemy(GeneratePoint1.transform.localPosition);

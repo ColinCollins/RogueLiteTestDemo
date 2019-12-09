@@ -6,7 +6,7 @@ public class PassRewardChoice
 {
 	public delegate void PassRewardHandle();
 
-	public int maxReward = 4;
+	public int maxReward = 2;
 	public string RewardText = "";
 	public PassRewardHandle RewardMethod;
 
@@ -20,7 +20,7 @@ public class PassRewardChoice
 		var tempHandle = new PassRewardChoice("Solider Attack Range Up +");
 		tempHandle.RewardMethod = () =>
 		{
-			CenterCtrl.GetInstance().PCtrl.PEPool.SoliderElfAttackRange += 5;
+			CenterCtrl.GetInstance().PCtrl.PEPool.SoliderElfAttackRange += 1;
 		};
 
 		return tempHandle;
@@ -31,7 +31,7 @@ public class PassRewardChoice
 		var tempHandle = new PassRewardChoice("Solider Attack Up +");
 		tempHandle.RewardMethod = () =>
 		{
-			CenterCtrl.GetInstance().PCtrl.PEPool.SoliderElfAttack += 5;
+			CenterCtrl.GetInstance().PCtrl.PEPool.SoliderElfAttack += 2;
 		};
 
 		return tempHandle;
@@ -42,7 +42,7 @@ public class PassRewardChoice
 		var tempHandle = new PassRewardChoice("CD Speed Up +");
 		tempHandle.RewardMethod = () =>
 		{
-			CenterCtrl.GetInstance().PCtrl.RestoreSpeed += 10;
+			CenterCtrl.GetInstance().PCtrl.RestoreSpeed += 3;
 		};
 
 		return tempHandle;

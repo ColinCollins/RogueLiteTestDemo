@@ -24,7 +24,6 @@ public class BaseElf : MonoBehaviour
 	public float AttackRange = 10f;
 	public float DetectRange = 20f;
 
-	[HideInInspector]
 	public float MoveSpeed = 10f;
 	public float RotateSpeed = 20f;
 

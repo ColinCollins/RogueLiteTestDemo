@@ -175,7 +175,12 @@ public class EnemyElf : BaseElf
 	private void OnTriggerEnter(Collider other)
 	{
 		if (other.transform.tag.Equals("Boom")) {
-			Life -= other.transform.parent.GetComponent<SoliderElf>().Attack;
+
+			float attack = other.transform.parent.tag.Equals("Weapon") ?
+				other.transform.parent.GetComponent<BulletElf>().Attack:
+			other.transform.parent.GetComponent<SoliderElf>().Attack;
+
+			Life -= attack;
 		}
 	}
 }

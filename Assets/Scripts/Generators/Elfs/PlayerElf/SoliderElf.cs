@@ -13,7 +13,6 @@ public class SoliderElf : BaseElf
 	public AudioSource explorAudio;
 	public AudioSource generarteAudio;
 
-	public ParticleSystem GeneratePar;
 	public ParticleSystem ExplorePar;
 
 	public SoliderAIAction action;
@@ -88,8 +87,7 @@ public class SoliderElf : BaseElf
 	public void BornedStage()
 	{
 		ResetProp();
-		GeneratePar.Play();
-		generarteAudio.Play();
+		selector.HideAttackRange();
 		State = ElfState.Idle;
 	}
 
@@ -140,6 +138,7 @@ public class SoliderElf : BaseElf
 		explorAudio.Play();
 
 		action.Append(boomTrigger.transform.DOScale(Vector3.one * AttackRange, 0.2f));
+		selector.ShowAttackRange();
 
 		action.AppendCallback(() =>
 		{

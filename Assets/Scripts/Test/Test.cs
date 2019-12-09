@@ -1,21 +1,24 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class Test : MonoBehaviour
+public class Test : MonoBehaviour, IDragHandler, IBeginDragHandler, IEndDragHandler,IPointerDownHandler,IPointerUpHandler
 {
 	private Animation anim;
 	public LayerMask rayLayer;
 
+	public Scrollbar bar;
+
 	private void Start()
 	{
 		anim = GetComponent<Animation>();
+	
 	}
 
 	// Update is called once per frame
 	void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Keypad0))
+	{
+		if (Input.GetKeyDown(KeyCode.Keypad0))
 		{
 			anim.Play("idle");
 		}
@@ -51,5 +54,34 @@ public class Test : MonoBehaviour
 			}
 		}
 
+	}
+
+	public void OnDrag(PointerEventData eventData)
+	{
+		Debug.Log("Drag");
+
+		//throw new System.NotImplementedException();
+	}
+
+	void IBeginDragHandler.OnBeginDrag(PointerEventData eventData)
+	{
+		Debug.Log("Begin Drag");
+		//throw new System.NotImplementedException();
+	}
+
+	public void OnEndDrag(PointerEventData eventData)
+	{
+		Debug.Log("End Drag");
+		//throw new System.NotImplementedException();
+	}
+
+	public void OnPointerDown(PointerEventData eventData)
+	{
+		Debug.Log("Pointer Down");
+	}
+
+	public void OnPointerUp(PointerEventData eventData)
+	{
+		Debug.Log("Pointer Up");
 	}
 }

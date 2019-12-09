@@ -42,7 +42,6 @@ public class CenterCtrl : MonoBehaviour
 		ECtrl.ResetScene();
 	}
 
-
 	void Update()
 	{
 		if (GameManager.GetInstance().isPlaying()) {
@@ -92,7 +91,7 @@ public class CenterCtrl : MonoBehaviour
 			float targetZ = playerElfsCtrl.PlayerBaseHome.transform.localPosition.z;
 			float dt = localPos.z - targetZ;
 
-			if (dt < 10 && !enemy.isSurvive)
+			if (dt < 1 && !enemy.isSurvive)
 			{
 				enemy.State = ElfState.Attack;
 				enemy.isSurvive = true;

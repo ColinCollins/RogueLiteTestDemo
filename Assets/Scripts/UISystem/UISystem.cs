@@ -24,13 +24,6 @@ public class UISystem : MonoBehaviour
 
 	#endregion
 
-	#region Grocery
-	
-	// for gamePanel
-	public GameObject ClickObject;
-
-	#endregion
-
 	private Queue<UIPanel> popUpQueue = null;
 	private List<UIPanel> panelList = null;
 
@@ -177,19 +170,19 @@ public class UISystem : MonoBehaviour
 		}
 	}
 
-	public void SwitchClickObject(bool isShow)
-	{
-		if (isShow)
-		{
-			if (curPanelHandle.Type == PanelType.GamePanel)
-				ClickObject.SetActive(true);
-		}
-		else
-		{
-			if (curPanelHandle == null || curPanelHandle.Type != PanelType.GamePanel)
-				ClickObject.SetActive(false);
-		}
-	}
+	//public void SwitchClickObject(bool isShow)
+	//{
+	//	if (isShow)
+	//	{
+	//		if (curPanelHandle.Type == PanelType.GamePanel)
+	//			ClickObject.SetActive(true);
+	//	}
+	//	else
+	//	{
+	//		if (curPanelHandle == null || curPanelHandle.Type != PanelType.GamePanel)
+	//			ClickObject.SetActive(false);
+	//	}
+	//}
 
 	public UIPanel FindSpecialPanel(PanelType type)
 	{

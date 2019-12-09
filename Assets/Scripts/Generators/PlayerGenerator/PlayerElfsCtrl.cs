@@ -35,12 +35,17 @@ public class PlayerElfsCtrl : MonoBehaviour
 		else
 		{
 			tempComp.transform.SetParent(soliderPool.parent.transform);
-			tempComp.transform.localScale = Vector3.one;
 			tempComp.transform.eulerAngles = new Vector3(0, 0, 0);
 			tempComp.Init(this);
 		}
 
-		tempComp.transform.localPosition = new Vector3(curPos.x, curPos.y, curPos.z + 8f);
+		float rx = Random.Range(-1f, 1f);
+		float rz = Random.Range(1f, 2f);
+		float rs = Random.Range(0.7f, 1.5f);
+		// Debug.Log(rx + ": " + rz);
+
+		tempComp.transform.localScale = Vector3.one * rs;
+		tempComp.transform.localPosition = new Vector3(curPos.x + rx, curPos.y, curPos.z + rz);
 
 		// 更新升级后的状态
 		resetOriginState(tempComp);

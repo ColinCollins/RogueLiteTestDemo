@@ -15,35 +15,45 @@ public class PlayerCtrl : MonoBehaviour
 
 	// CD 恢复速度
 	public float RestoreSpeed = 10;
-	public float EnergyCast = 20;
-	public float MaxEnergyCount = 100;
+	public float CallEnergyCast = 20;
+	public float WeaponEnergyCast = 30;
 
-	#endregion
+	public float MaxCallEnergyCount = 100;
+	public float MaxWeaponEnergyCount = 100;
 
-	#region LocateObj
-
-	public GameObject LocateObj;
-	public float LocateMovingTime = 2.0f;
-	private float movingRange = 30;
-	private Vector3 initLocatePos = new Vector3(0, 0, -68);
-
-	#endregion
-
-	#region For GamePanel
-
-	private float curEnergyCount;
-	public float CurEnergyCount
+	// For GamePanel
+	private float curCallEnergyCount;
+	public float CurCallEnergyCount
 	{
 		set
 		{
-			curEnergyCount = value;
+			curCallEnergyCount = value;
 			UISystem.GetInstance().UpdateGamePanelData();
 		}
 		get
 		{
-			return curEnergyCount;
+			return curCallEnergyCount;
 		}
 	}
+
+	private float curWeaponEnergyCount;
+	public float CurWeaponEnergyCount {
+		get {
+			return curWeaponEnergyCount;
+		}
+
+		set {
+			curWeaponEnergyCount = value;
+			UISystem.GetInstance().UpdateGamePanelData();
+		}
+	}
+
+	#endregion
+
+	#region CallMaster 
+
+	public GameObject CallMasterPrefab;
+	private CallMasterElf callMaster;
 
 	#endregion
 
@@ -75,18 +85,21 @@ public class PlayerCtrl : MonoBehaviour
 	public void Init(CenterCtrl manager)
 	{
 		this.manager = manager;
-		curEnergyCount = MaxEnergyCount;
-		LocateObj.transform.localPosition = initLocatePos;
+		curCallEnergyCount = MaxCallEnergyCount;
+		curWeaponEnergyCount = MaxWeaponEnergyCount;
 
 		PEPool.Init();
 
-		// LocateObjMoving();
+		initCallMaster();
+
+		// LocateObjMoving(); temporay removes
 	}
 
 	public void ResetScene()
 	{
 		Life = 10;
-		CurEnergyCount = MaxEnergyCount;
+		CurCallEnergyCount = MaxCallEnergyCount;
+		CurWeaponEnergyCount = MaxWeaponEnergyCount;
 
 		PEPool.Recycle(true);
 	}
@@ -97,7 +110,7 @@ public class PlayerCtrl : MonoBehaviour
 		if (GameManager.GetInstance().isPlaying())
 		{
 			restoreEnergySlider();
-			clickToGenerateDetection();
+			// clickToGenerateDetection();
 
 			switchDOTween(true);
 		}
@@ -106,87 +119,117 @@ public class PlayerCtrl : MonoBehaviour
 		}
 	}
 
-	private void clickToGenerateDetection()
+	#region Call Master 
+
+	private void initCallMaster()
 	{
-//#if UNITY_EDITOR
-//		if (Input.GetMouseButtonDown(0))
-//		{
-//			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-//			RaycastHit hit;
-//			if (Physics.Raycast(ray, out hit, 1000f, rayLayer))
-//			{
-//				// play Animation
-//				clickObjAnim.Play();
-//				// Generate
-//				generateNewSolider();
-//			}
-//		}
-//#endif
-//#if UNITY_ANDROID
-//		if (Input.touchCount > 0 && !isTouchDown)
-//		{
-//			isTouchDown = true;
+		var obj = Instantiate(CallMasterPrefab);
+		var tempTrans = obj.transform;
+		tempTrans.SetParent(PEPool.transform);
+		tempTrans.localScale = Vector3.one;
+		tempTrans.localEulerAngles = Vector3.zero;
 
-//			var touch = Input.GetTouch(0);
-//			Ray ray = Camera.main.ScreenPointToRay(touch.position);
-//			RaycastHit hit;
-//			if (Physics.Raycast(ray, out hit, 1000f, rayLayer))
-//			{
-//				// play Animation
-//				clickObjAnim.Play();
-//				// Generate
-//				generateNewSolider();
-//			}
-//		}
-
-//		if (Input.touchCount <= 0) isTouchDown = false;
-//#endif
+		callMaster = obj.GetComponent<CallMasterElf>();
+		callMaster.Init();
 	}
 
-	public void LocateObjMoving()
-	{
-		Sequence moving = DOTween.Sequence();
-		moving.Append(LocateObj.transform.DOMoveX(-movingRange, 0f));
-		moving.Append(LocateObj.transform.DOMoveX(movingRange, LocateMovingTime).SetEase(Ease.Linear));
-
-		moving.AppendCallback(() =>
-		{
-			LocateObjMoving();
-		});
+	public CallMasterElf GetCallMaster() {
+		return callMaster;
 	}
+
+	#endregion
+
+	//	private void clickToGenerateDetection()
+	//	{
+	//#if UNITY_EDITOR
+	//		if (Input.GetMouseButtonDown(0))
+	//		{
+	//			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+	//			RaycastHit hit;
+	//			if (Physics.Raycast(ray, out hit, 1000f, rayLayer))
+	//			{
+	//				// play Animation
+	//				clickObjAnim.Play();
+	//				// Generate
+	//				generateNewSolider();
+	//			}
+	//		}
+	//#endif
+	//#if UNITY_ANDROID
+	//		if (Input.touchCount > 0 && !isTouchDown)
+	//		{
+	//			isTouchDown = true;
+
+	//			var touch = Input.GetTouch(0);
+	//			Ray ray = Camera.main.ScreenPointToRay(touch.position);
+	//			RaycastHit hit;
+	//			if (Physics.Raycast(ray, out hit, 1000f, rayLayer))
+	//			{
+	//				// play Animation
+	//				clickObjAnim.Play();
+	//				// Generate
+	//				generateNewSolider();
+	//			}
+	//		}
+
+	//		if (Input.touchCount <= 0) isTouchDown = false;
+	//#endif
+	//	}
+
+	//public void LocateObjMoving()
+	//{
+	//	Sequence moving = DOTween.Sequence();
+	//	moving.Append(LocateObj.transform.DOMoveX(-movingRange, 0f));
+	//	moving.Append(LocateObj.transform.DOMoveX(movingRange, LocateMovingTime).SetEase(Ease.Linear));
+
+	//	moving.AppendCallback(() =>
+	//	{
+	//		LocateObjMoving();
+	//	});
+	//}
 
 	public void switchDOTween(bool isOpen) {
 		if (isOpen && DOTween.timeScale <= 0) DOTween.timeScale = 1;
 		if (!isOpen && DOTween.timeScale > 0) DOTween.timeScale = 0;
 	}
 
-	public void ResetGenerator()
-	{
-		CurEnergyCount = MaxEnergyCount;
-	}
-
 	private void restoreEnergySlider()
 	{
-		if (CurEnergyCount < MaxEnergyCount)
+		// restore summon energy
+		if (CurCallEnergyCount < MaxCallEnergyCount)
 		{
-			CurEnergyCount += RestoreSpeed * Time.deltaTime;
+			CurCallEnergyCount += RestoreSpeed * Time.deltaTime;
 		}
 		else {
-			CurEnergyCount = MaxEnergyCount;
+			CurCallEnergyCount = MaxCallEnergyCount;
+		}
+
+		// restore weapon energy
+		if (CurWeaponEnergyCount < MaxWeaponEnergyCount)
+		{
+			CurWeaponEnergyCount += RestoreSpeed * Time.deltaTime;
+		}
+		else
+		{
+			CurWeaponEnergyCount = MaxWeaponEnergyCount;
 		}
 	}
 
 	public void GenerateNewSolider()
 	{
-		var pos = LocateObj.transform.localPosition;
-		var Lx = pos.x;
+		if (curCallEnergyCount - CallEnergyCast < 0) return;
 
-		if (curEnergyCount - EnergyCast < 0 || Lx <= -(movingRange - 3) || Lx >= (movingRange - 3))
-		{
-			return;
-		};
-
-		curEnergyCount -= EnergyCast;
-		PEPool.GenerateNewSolider(pos);
+		CurCallEnergyCount -= CallEnergyCast;
+		PEPool.GenerateNewSolider(callMaster.transform.localPosition);
 	}
+
+
+	public void CallMasterAttack() {
+		float energyCast = callMaster.AttackCtrl.IsMagic ? 20f : 15f;
+		if (curWeaponEnergyCount - energyCast < 0) return;
+
+		CurWeaponEnergyCount -= energyCast;
+		callMaster.ShotAttack();
+	}
+
 }

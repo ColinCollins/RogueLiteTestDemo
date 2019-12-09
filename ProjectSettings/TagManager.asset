@@ -10,6 +10,7 @@ TagManager:
   - Boom
   - UICanvas
   - RenderCanvas
+  - Weapon
   layers:
   - Default
   - TransparentFX
